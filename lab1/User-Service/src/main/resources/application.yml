@@ -18,6 +18,7 @@ spring:
 #    username:
 #    password:
 
+
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -30,3 +31,8 @@ eureka:
 
 greeting:
   message: Welcome to the Simple E-commerce
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+      sensitive : false
