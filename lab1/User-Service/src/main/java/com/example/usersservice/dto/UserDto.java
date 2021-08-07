@@ -27,6 +27,9 @@ public class UserDto {
 
     private Date createdAt;
 
+
     private String encryptedPwd;
+//    request body 에 json 형태로 있을 정보를 requestUser로 매핑한뒤 Dto로 매핑한 후 서비스에게 전달된다.
+//    꼮 dto를 사용해야할 이유는 무엇일까?
 
 }
