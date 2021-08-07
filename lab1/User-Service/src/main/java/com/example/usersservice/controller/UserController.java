@@ -13,7 +13,6 @@ public class UserController {
 
 
     Environment env;
-
     @Autowired
     public UserController(Environment env) {
         this.env = env;
@@ -23,4 +22,7 @@ public class UserController {
     public String status(){
         return env.getProperty("greeting.message");
     }
+
+
+
 }
