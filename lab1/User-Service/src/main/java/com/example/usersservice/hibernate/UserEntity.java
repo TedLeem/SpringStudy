@@ -30,7 +30,7 @@ public class UserEntity {
     @Column(nullable = false, unique = true)
     private String userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private Date createdAt;
 
     @Column(nullable = false, unique = true)
