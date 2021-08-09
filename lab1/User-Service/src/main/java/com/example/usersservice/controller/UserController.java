@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user-service")
 public class UserController {
 
 
@@ -35,7 +35,6 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity createUser(@RequestBody RequestUser requestUser){
 
-//        RequestBody의 역할은?
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
