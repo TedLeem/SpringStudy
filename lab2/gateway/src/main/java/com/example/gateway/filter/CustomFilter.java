@@ -29,6 +29,7 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
             }));
         };
     }
+//    exchange chain 다시 이해하기
 
     public static class Config{
 //        put the configuration properties
