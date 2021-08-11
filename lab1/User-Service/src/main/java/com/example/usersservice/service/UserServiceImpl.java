@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 
     private UserRepository userRepository;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto getUserById(String userId) {
-        UserEntity userEntity = userRepository.findById(userId);
+        UserEntity userEntity = userRepository.findByUserId(userId);
 
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found");
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Iterable<UserEntity> getUserByAll(){
+    public Iterable<UserEntity> getUserByAll() {
         return userRepository.findAll();
     }
 }

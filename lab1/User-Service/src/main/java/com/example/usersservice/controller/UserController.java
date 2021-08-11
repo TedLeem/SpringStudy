@@ -25,19 +25,20 @@ public class UserController {
 
     Environment env;
     UserService userService;
+
     @Autowired
-    public UserController(Environment env ,UserService userService) {
+    public UserController(Environment env, UserService userService) {
         this.env = env;
         this.userService = userService;
     }
 
     @GetMapping("/health_check")
-    public String status(){
+    public String status() {
         return env.getProperty("greeting.message");
     }
 
     @PostMapping("/users")
-    public ResponseEntity createUser(@RequestBody RequestUser requestUser){
+    public ResponseEntity createUser(@RequestBody RequestUser requestUser) {
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -49,29 +50,29 @@ public class UserController {
         ResponseUser responseUser = mapper.map(responseUserDto, ResponseUser.class);
 
 //        보통 데이터 생성의 정상적인 응답은 201이므로 다음과 같은 response entity를 호출해준다.
-        return new ResponseEntity(responseUser,HttpStatus.CREATED);
+        return new ResponseEntity(responseUser, HttpStatus.CREATED);
 
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<ResponseUser>> getUsers(){
+    public ResponseEntity<List<ResponseUser>> getUsers() {
         Iterable<UserEntity> userList = userService.getUserByAll();
 
         List<ResponseUser> result = new ArrayList<>();
 
 
-        userList.forEach( v -> {
-            result.add(new ModelMapper().map(v,ResponseUser.class));
+        userList.forEach(v -> {
+            result.add(new ModelMapper().map(v, ResponseUser.class));
         });
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId){
+    public ResponseEntity<ResponseUser> getUser(@PathVariable("userId") String userId) {
         UserDto userDto = userService.getUserById(userId);
 
-        ResponseUser responseUser = new ModelMapper().map(userDto,ResponseUser.class);
+        ResponseUser responseUser = new ModelMapper().map(userDto, ResponseUser.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseUser);
     }

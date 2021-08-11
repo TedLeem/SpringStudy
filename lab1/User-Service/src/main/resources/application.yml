@@ -1,4 +1,3 @@
-
 server:
   port: 0
 
@@ -35,4 +34,4 @@ management:
   endpoint:
     shutdown:
       enabled: true
-      sensitive : false
+      sensitive: false
