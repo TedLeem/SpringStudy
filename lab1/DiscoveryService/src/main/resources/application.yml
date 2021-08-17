@@ -10,3 +10,6 @@ eureka:
     register-with-eureka: false
     fetch-register: false
 #    자기자신은 서비스디스커버리에 등록하지않음
+  server: #레지스트리 삭제옵션
+    enable-self-preservation: false #개발일때만 사용, 운영시 삭제해야함
+    eviction-interval-timer-in-ms: 3000 #하트비트 수신점검
