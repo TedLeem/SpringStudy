@@ -9,6 +9,8 @@ import java.util.Date;
 public class RequestOrder {
     private String productId;
 
+    private String productName;
+
     private Integer qty;
 
     private Integer unitPrice;

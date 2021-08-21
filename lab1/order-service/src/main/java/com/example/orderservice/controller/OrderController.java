@@ -2,9 +2,11 @@ package com.example.orderservice.controller;
 
 import com.example.orderservice.dto.OrderDto;
 import com.example.orderservice.jpa.OrderEntity;
+import com.example.orderservice.messagequeue.KafkaProducer;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
 import com.example.orderservice.vo.ResponseOrder;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.math.raw.Mod;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -18,16 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order-service")
+@Slf4j
+//@RequestMapping("/order-service")
 public class OrderController {
 
     Environment env;
     OrderService orderService;
-
+    KafkaProducer kafkaProducer;
     @Autowired
-    public OrderController(Environment env, OrderService orderService) {
+    public OrderController(Environment env, OrderService orderService , KafkaProducer kafkaProducer) {
         this.env = env;
         this.orderService = orderService;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @PostMapping("/{userId}/orders")
@@ -39,6 +43,8 @@ public class OrderController {
         OrderDto orderDto = mapper.map(requestOrder, OrderDto.class);
         orderDto.setUserId(userId);
         orderService.createOrder(orderDto);
+
+        kafkaProducer.send("example-category-topic",orderDto);
 
         ResponseOrder responseOrder = mapper.map(orderDto,ResponseOrder.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);

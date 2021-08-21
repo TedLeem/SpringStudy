@@ -8,6 +8,8 @@ import java.io.Serializable;
 public class OrderDto implements Serializable {
     private String productId;
 
+    private String productName;
+
     private Integer qty;
 //          수량
     private Integer unitPrice;
