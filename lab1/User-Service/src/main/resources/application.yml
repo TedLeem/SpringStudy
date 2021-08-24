@@ -32,11 +32,17 @@ eureka:
 
 greeting:
   message: Welcome to the Simple E-commerce
+
 management:
   endpoint:
     shutdown:
       enabled: true
       sensitive: false
+
 logging:
   level:
     com.example.userservice: DEBUG
+
+token:
+  expiration_time: 8640000
+  secret: user_token

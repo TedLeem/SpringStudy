@@ -4,6 +4,8 @@ import com.example.usersservice.dto.UserDto;
 import com.example.usersservice.service.UserService;
 import com.example.usersservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 //사용자가 로그인을 시도하게 되면 가장 먼저 호출될 필터
 //Spring Security를 이용한 로그인 요청 발생시 작업을 처리해주는 Custom FIlter 클래스
@@ -64,5 +67,20 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String userName = ((User) authResult.getPrincipal()).getUsername();
         UserDto userDetails = userService.getUserDetailsByEmail(userName);
 
+//        token 생성
+//        생성된 토큰을 사용자는 어디에 저장할 것 인가?
+//        jwt는 사용자 브러우저 내의 안전한 저장소 (Local Storage가아닌)곳에 저장되어야 한다.
+//        jwt는 http요청으로만 서버에 전송되는 httpOnly 쿠키 내에 저장되어야 한다.
+        String token = Jwts.builder()
+                .setSubject(userDetails.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() +
+                        Long.parseLong(env.getProperty("token.expiration_time"))))
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+                .compact();
+
+//        application.yml파일에 있는 모든 값은 문자열로 가져와서 만료기간 설정은 Long형으로 바꿔줘야함
+
+        response.addHeader("token", token);
+        response.addHeader("userId" , userDetails.getUserId());
     }
 }
