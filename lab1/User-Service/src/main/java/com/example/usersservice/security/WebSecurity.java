@@ -53,6 +53,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         authenticationFilter.setAuthenticationManager(authenticationManager());
         return authenticationFilter;
+    // AuthenticationManager는 ProvierManager를 구현한 클래스로써,
+    // 인자로 전달받은 유저에 대한 인증 정보를 담고 있으며, 해당 인증 정보가 유효할 경우
+    // UserDetailsService에서 적절한 Principal을 가지고 있는 Authentication 객체를 반환해 주는 역할을
+    // 하는 인증 공급자(Provider) 입니다.
 
 //        스프링 시큐리티에 있는 authenticationManager를 등록해 스프링시큐리티 로그인을 사용하려함
     }

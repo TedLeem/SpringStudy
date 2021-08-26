@@ -64,8 +64,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 //            subject반환??? 잘모르겠음 subject
 
 
-
-
         }catch (Exception ex){
             returnValue = false;
         }
