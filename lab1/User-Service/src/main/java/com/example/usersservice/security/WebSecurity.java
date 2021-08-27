@@ -36,6 +36,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         // 인증이 통과가 되면 할 수 있는 작업들인 권한과 관련된 설정
         http.csrf().disable();
 //        http.authorizeRequests().antMatchers("/users/**").permitAll();
+        http.authorizeRequests().antMatchers("/actuator/**").permitAll();
+//      actuator 를 이용한 접근은 모두 허용 (beans : 해당 서비스의 모든 빈 정보 확인, refresh: 상태정보 다시 불러오기 등)
+
         http.authorizeRequests().antMatchers("/**")
                 .hasIpAddress("127.0.0.1")
                 .and()

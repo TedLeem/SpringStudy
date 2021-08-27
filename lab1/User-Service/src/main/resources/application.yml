@@ -38,11 +38,15 @@ management:
     shutdown:
       enabled: true
       sensitive: false
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
 
 logging:
   level:
     com.example.userservice: DEBUG
 
-token:
-  expiration_time: 8640000
-  secret: user_token
+#token:
+#  expiration_time: 8640000
+#  secret: user_token
