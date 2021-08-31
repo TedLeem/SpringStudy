@@ -16,7 +16,11 @@ spring:
     url: jdbc:h2:mem:testdb
 #    username:
 #    password:
-
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   instance:
@@ -41,12 +45,14 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
+
+
 
 logging:
   level:
     com.example.userservice: DEBUG
 
-#token:
-#  expiration_time: 8640000
-#  secret: user_token
+token:
+  expiration_time: 8640000
+  secret: user_token

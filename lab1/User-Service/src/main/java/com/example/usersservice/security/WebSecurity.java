@@ -16,7 +16,6 @@ import javax.servlet.Filter;
 
 // 스프링 앱이 실행되면 컨피규레이션 어노테이션이 붙여져있는 클래스가 메모리에 올라가 빈으로 등록된다.
 // Configuration이 붙은 클래스는 애플리케이션 컨텍스트가 Ioc적용을 위한 설정정보이다.
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -43,9 +42,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .hasIpAddress("127.0.0.1")
                 .and()
                 .addFilter(getAuthenticationFilter());
-//        getAuthenticationFilter ㅔ소드를 통해
+        //authorizeRequests() : Allows restricting access based upon the HttpServletRequest using RequestMatcher implementations.
 
-
+        // permitAll() : This will allow the public access that is anyone can access endpoint PUBLIC_URL without authentication.
         http.headers().frameOptions().disable();
 
     }
@@ -68,10 +67,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 // 인증과 관련된 설정
 // 인증이 되어야지 권한부여받을 수 있음
-//   BCryptPasswordEncoder는 BCrypt 해싱 함수를 사용해서 데이터를 암호화하는 클래스
-//        Bcrypt는 데이터(주로 패스워드)를 해싱할 떄 내부적으로 랜덤한 솔트를 생성하기 떄문에 같은 문자열에 대해서도
-//        다른 결과를 생성해 냅니다. 같은 데이터를 암호화 하였을때, 매번 같은 데이터가 발생하면, 누구나 쉽게 데이터를 복호화 할 수 도 있을 겁니다.
-//
+// BCryptPasswordEncoder는 BCrypt 해싱 함수를 사용해서 데이터를 암호화하는 클래스
+// Bcrypt는 데이터(주로 패스워드)를 해싱할 떄 내부적으로 랜덤한 솔트를 생성하기 떄문에 같은 문자열에 대해서도
+// 다른 결과를 생성해 냅니다. 같은 데이터를 암호화 하였을때, 매번 같은 데이터가 발생하면, 누구나 쉽게 데이터를 복호화 할 수 도 있을 겁니다.
+
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
         super.configure(auth);
     }

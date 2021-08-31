@@ -56,13 +56,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         //1. spring security가 사용할 수 있는 형태(토큰)로 아이디와 비번을 변환한다.(UsernamePasswordAuthenticationToken)
 
-        //2. authenticationManager가 토큰을 인증을함
+        //2. authenticationManager가 토큰이 유효한지 인증을함
         //AuthenticationManager는 ProvierManager를 구현한 클래스로써,
         // 인자로 전달받은 유저에 대한 인증 정보를 담고 있으며,
-        // 해당 인증 정보가 유효할 경우 UserDetailsService에서
+        // 해당 인증 정보가 유효할 경우 UserDetailsService에서 (UserDetailService에 loadUserByUsername으로 db에서 User를 가져온다)
         // 적절한 Principal을 가지고 있는 Authentication 객체를 반환해 주는 역할을 하는 인증 공급자(Provider)
 
-        //3.UserDetailService에 loadUserByUsername으로 db에서 User를 가져온다
+        // 3. 새롭게 발급받은 Authentcation을 Security Context에 저장한다.
+
+
+
+
+
         }catch(IOException e){
             throw new RuntimeException(e);
 
