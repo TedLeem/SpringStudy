@@ -85,13 +85,16 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        try{
-            orderList = orderServiceClient.getOrders(userId);
-        } catch (FeignException.FeignClientException ex){
+        //        feignclient error exception
+//        try{
+//            orderList = orderServiceClient.getOrders(userId);
+//        } catch (FeignException.FeignClientException ex){
+//
+//            log.error(ex.getMessage());
+//        }
 
-            log.error(ex.getMessage());
-        }
-
+//        feignErrorDecoder가 자동으로 감지
+        orderList = orderServiceClient.getOrders(userId);
         userDto.setOrders(orderList);
 
         return userDto;

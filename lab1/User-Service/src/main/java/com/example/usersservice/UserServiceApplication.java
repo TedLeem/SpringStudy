@@ -1,5 +1,6 @@
 package com.example.usersservice;
 
+import com.example.usersservice.error.FeignErrorDecoder;
 import lombok.extern.java.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,4 +32,12 @@ public class UserServiceApplication {
         return feign.Logger.Level.FULL;
 
     }
+    //    여기에 빈을 등록하는 이유는?
+//
+//    @Bean
+//    public FeignErrorDecoder getFeignErrorDecoder(){
+//        return new FeignErrorDecoder();
+//    }
+
+
 }
