@@ -1,10 +1,13 @@
 package com.example.usersservice.service;
 
 
+import com.example.usersservice.client.OrderServiceClient;
 import com.example.usersservice.dto.UserDto;
 import com.example.usersservice.hibernate.UserEntity;
 import com.example.usersservice.hibernate.UserRepository;
 import com.example.usersservice.vo.ResponseOrder;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
@@ -20,11 +23,24 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private OrderServiceClient orderServiceClient;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder passwordEncoder,
+                           OrderServiceClient orderServiceClient) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.orderServiceClient = orderServiceClient;
+//         userServiceImple 객체가 생성되면서 bcryptPasswordEncoder를 autowired를 통해 주입받으려고하면
+//        미리 빈으로 등록되어있어야함
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,13 +56,7 @@ public class UserServiceImpl implements UserService {
 //        마지막 매개변수 리스트에는 사용자가 인증이 완료되었을떄 가질 수 있는 권한들을 넣어주면 됌
     }
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-//         userServiceImple 객체가 생성되면서 bcryptPasswordEncoder를 autowired를 통해 주입받으려고하면
-//        미리 빈으로 등록되어있어야함
-    }
+
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -68,15 +78,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
-
+        List<ResponseOrder> orderList = new ArrayList<>();
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found");
         }
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        List<ResponseOrder> orders = new ArrayList<>();
-        userDto.setOrders(orders);
+        try{
+            orderList = orderServiceClient.getOrders(userId);
+        } catch (FeignException.FeignClientException ex){
+
+            log.error(ex.getMessage());
+        }
+
+        userDto.setOrders(orderList);
 
         return userDto;
 
@@ -98,4 +114,7 @@ public class UserServiceImpl implements UserService {
 
         return userDto;
     }
+
+
+
 }
