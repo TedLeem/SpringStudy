@@ -12,6 +12,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,14 +32,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
     private OrderServiceClient orderServiceClient;
+    private CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder passwordEncoder,
-                           OrderServiceClient orderServiceClient) {
+                           OrderServiceClient orderServiceClient,
+                           CircuitBreakerFactory circuitBreakerFactory) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.orderServiceClient = orderServiceClient;
+        this.circuitBreakerFactory = circuitBreakerFactory;
 //         userServiceImple 객체가 생성되면서 bcryptPasswordEncoder를 autowired를 통해 주입받으려고하면
 //        미리 빈으로 등록되어있어야함
     }
@@ -94,8 +99,13 @@ public class UserServiceImpl implements UserService {
 //        }
 
 //        feignErrorDecoder가 자동으로 감지
-        orderList = orderServiceClient.getOrders(userId);
-        userDto.setOrders(orderList);
+//        orderList = orderServiceClient.getOrders(userId);
+
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> ordersList = circuitBreaker.run( ()-> orderServiceClient.getOrders(userId),
+                throwable -> new ArrayList<>() );
+
+        userDto.setOrders(ordersList);
 
         return userDto;
 
